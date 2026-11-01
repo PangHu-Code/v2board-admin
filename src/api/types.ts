@@ -488,6 +488,8 @@ export interface GuardRiskUser {
   pulls: number
   ips: number
   uas: number
+  review_action?: GuardReviewAction | null
+  blacklisted?: boolean
   score: number
   high_risk: boolean
   /** 是否被限制（拉订阅时下发假入口） */
@@ -553,6 +555,7 @@ export interface GuardReview {
 export interface GuardUserDetail {
   user_id: number
   email: string
+  blacklisted?: boolean
   banned: number
   risk: GuardRisk
   /** 当前的限制记录（decoy_host 为该用户拉订阅时拿到的假入口地址）；未限制为 null */

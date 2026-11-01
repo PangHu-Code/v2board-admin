@@ -1,6 +1,7 @@
 // 风险用户（「概览」标签页）：按时段统计每个用户的订阅次数与来源 IP 数并评分；「详情」切到「用户详情」标签页，「审核」弹窗记审核 / 限制 / 解除限制
 import { ReloadOutlined } from '@ant-design/icons'
 import { Button, Select, Tag, type TableColumnsType } from 'antd'
+import { useMemo, useState } from 'react'
 import type { GuardHours, GuardRiskUser } from '@/api/types'
 import { paginationProps } from '@/hooks/usePagedList'
 import { useUi } from '@/stores/appearance'
@@ -31,6 +32,8 @@ interface RiskUsersProps {
 export function RiskUsers({ hours, onHoursChange, onDetail, onReviewed }: RiskUsersProps) {
   const ui = useUi()
   const users = useGuardUsers(hours)
+  const [view, setView] = useState<'all' | 'restricted' | 'watch'>('all')
+  const visibleUsers = useMemo(() => (users.data ?? []).filter((row) => view === 'all' || (view === 'restricted' ? row.restricted : row.review_action === 'watch' || row.review_action === 'restrict_recommended')), [users.data, view])
 
   const columns: TableColumnsType<GuardRiskUser> = [
     { title: '用户 ID', dataIndex: 'user_id', key: 'user_id', width: 90 },
@@ -46,6 +49,8 @@ export function RiskUsers({ hours, onHoursChange, onDetail, onReviewed }: RiskUs
               已限制
             </Tag>
           )}
+          {row.blacklisted && <Tag color="magenta" style={{ marginLeft: 6 }}>黑名单</Tag>}
+          {row.review_action === 'watch' && <Tag color="gold" style={{ marginLeft: 6 }}>持续观察</Tag>}
         </>
       ),
     },
@@ -97,6 +102,7 @@ export function RiskUsers({ hours, onHoursChange, onDetail, onReviewed }: RiskUs
       extra={
         <>
           <Select<GuardHours> style={{ width: 150 }} value={hours} options={HOURS_OPTIONS} onChange={onHoursChange} />
+          <Select value={view} style={{ width: 130 }} onChange={setView} options={[{ value: 'all', label: '全部账号' }, { value: 'restricted', label: '限制中' }, { value: 'watch', label: '持续观察' }]} />
           <Button icon={<ReloadOutlined />} loading={users.isFetching} onClick={() => void users.refetch()}>
             刷新
           </Button>
@@ -111,10 +117,10 @@ export function RiskUsers({ hours, onHoursChange, onDetail, onReviewed }: RiskUs
         <SubTable<GuardRiskUser>
           rowKey="user_id"
           loading={users.isLoading}
-          dataSource={users.data ?? []}
+          dataSource={visibleUsers}
           columns={columns}
           scroll={{ x: 900 }}
-          pagination={{ ...paginationProps(ui), defaultPageSize: 20, hideOnSinglePage: true }}
+          pagination={{ ...paginationProps(ui), defaultPageSize: 10, hideOnSinglePage: true }}
           style={{ marginBottom: 8 }}
         />
       )}

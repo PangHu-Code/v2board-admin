@@ -32,7 +32,7 @@ function Pane({ children }: { children: ReactNode }) {
 
 export default function InsiderGuardPage() {
   const [tab, setTab] = useState<TabKey>('overview')
-  const [hours, setHours] = useState<GuardHours>(1)
+  const [hours, setHours] = useState<GuardHours>(8)
   // 从风险用户表点「详情」：seq 每次递增（同一个用户再次点击也重新查询），userId 是要查的用户；
   // 「用户风险详情」以 seq 为 key 重建并直接查询该用户
   const [detailTarget, setDetailTarget] = useState<{ seq: number; userId?: number }>({ seq: 0 })

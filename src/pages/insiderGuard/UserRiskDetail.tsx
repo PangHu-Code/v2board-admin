@@ -1,7 +1,7 @@
 // 用户风险详情（「用户详情」标签页）：按用户 ID 查询评分摘要、最近事件（按小时汇总）、被下发过的节点（每人每节点一行）、审核记录；查到后可直接弹窗审核
 import { SearchOutlined } from '@ant-design/icons'
 import { useQuery } from '@tanstack/react-query'
-import { Button, Input, Tag, type TableColumnsType } from 'antd'
+import { Button, Input, Select, Tag, type TableColumnsType } from 'antd'
 import { useState, type ReactNode } from 'react'
 import { unwrap } from '@/api/request'
 import { fetchGuardUserDetail } from '@/api/services/insiderGuard'
@@ -76,23 +76,25 @@ interface UserRiskDetailProps {
 export function UserRiskDetail({ initialUserId, onReviewed }: UserRiskDetailProps) {
   const [draft, setDraft] = useState(initialUserId ? String(initialUserId) : '')
   const [userId, setUserId] = useState<number | undefined>(initialUserId)
+  const [mode, setMode] = useState<'id' | 'email'>('id')
 
   const detail = useQuery({
     queryKey: [...guardKeys.userDetail, userId],
-    queryFn: () => unwrap(fetchGuardUserDetail(userId as number)),
+    queryFn: () => unwrap(fetchGuardUserDetail(mode === 'id' ? { id: userId as number } : { email: draft.trim() })),
     enabled: userId !== undefined,
   })
 
   const search = () => {
     // 只接受纯数字且 ≥ 1 的用户 ID（与「最近事件」一致）
-    const id = parseUserId(draft)
-    if (id === undefined) {
+    const id = mode === 'id' ? parseUserId(draft) : undefined
+    if (mode === 'id' && id === undefined) {
       message.error('请输入有效的用户 ID')
       return
     }
+    if (mode === 'email' && !draft.trim().includes('@')) return message.error('请输入有效的邮箱')
     // 同一个用户再次点「查询」：重新请求
-    if (id === userId) void detail.refetch()
-    else setUserId(id)
+    if (mode === 'id' && id === userId) void detail.refetch()
+    else setUserId(mode === 'email' ? 0 : id)
   }
 
   const data = detail.data
@@ -100,9 +102,10 @@ export function UserRiskDetail({ initialUserId, onReviewed }: UserRiskDetailProp
     <Section
       extra={
         <>
+          <Select value={mode} style={{ width: 100 }} onChange={setMode} options={[{ value: 'id', label: '用户 ID' }, { value: 'email', label: '邮箱' }]} />
           <Input
             style={{ width: 160 }}
-            placeholder="用户 ID"
+            placeholder={mode === 'id' ? '用户 ID' : '用户邮箱'}
             allowClear
             value={draft}
             onChange={(e) => setDraft(e.target.value)}
@@ -152,6 +155,7 @@ export function UserRiskDetail({ initialUserId, onReviewed }: UserRiskDetailProp
                   <span style={MUTED}>限制状态：</span>
                   {data.restriction ? <Tag color="red">已限制</Tag> : <Tag>未限制</Tag>}
                 </span>
+                {data.blacklisted && <Tag color="magenta">黑名单</Tag>}
               </div>
               {data.restriction && (
                 <Note style={{ marginBottom: 12 }}>

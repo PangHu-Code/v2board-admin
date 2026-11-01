@@ -30,7 +30,7 @@ export const fetchGuardEvents = (params: {
   user_id?: number
   event_type?: GuardEventType
 }) => get<GuardEvent[]>(guardPath('events'), params)
-export const fetchGuardUserDetail = (id: number) => get<GuardUserDetail>(guardPath('userDetail'), { id })
+export const fetchGuardUserDetail = (params: { id?: number; email?: string }) => get<GuardUserDetail>(guardPath('userDetail'), params)
 /** 人工审核记录（不改变账号状态）：原因 8～1000 字 */
 export const saveGuardReview = (params: { id: number; action: GuardReviewAction; reason: string }) =>
   post<boolean>(guardPath('review'), params)
@@ -52,6 +52,6 @@ export const fetchGuardHealth = () => get<GuardHealth>(guardPath('health'))
 /** 立即探测一个节点的 TCP 连通性（后端限流 10 次 / 分钟） */
 export const checkNodeHealth = (params: { node_type: NodeType; node_id: number }) =>
   post<GuardHealthCheckResult>(guardPath('healthCheck'), params)
-export const fetchGuardBlacklist = () => get<GuardBlacklistItem[]>(guardPath('blacklist'))
-export const addGuardBlacklist = (email: string, note: string) => post<boolean>(guardPath('blacklist'), { email, note })
+export const fetchGuardBlacklist = (params?: { page?: number; page_size?: number; search?: string }) => get<{ items: GuardBlacklistItem[]; total: number }>(guardPath('blacklist'), params)
+export const addGuardBlacklist = (emails: string[], note: string) => post<boolean>(guardPath('blacklist'), { emails, note })
 export const removeGuardBlacklist = (id: number) => post<boolean>(guardPath('blacklist/remove'), { id })
