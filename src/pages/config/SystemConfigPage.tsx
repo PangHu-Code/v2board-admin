@@ -4,8 +4,6 @@ import { usePlans } from '@/api/queries'
 import { V2Tabs } from '@/components/V2Tabs'
 import { AdminLayout } from '@/layouts/AdminLayout'
 import { useConfigManageStore, type ConfigGroup } from '@/stores/configManage'
-import { DomainRewriteRules } from './subscribeRules/DomainRewriteRules'
-import { NodeWhitelistRules } from './subscribeRules/NodeWhitelistRules'
 
 interface ConfigItemProps {
   title: ReactNode
@@ -431,9 +429,6 @@ export default function SystemConfigPage() {
           ) : (
             ''
           )}
-          {/* v3board：订阅域名重写、节点 UA 白名单（独立读写，不走分组自动保存） */}
-          <DomainRewriteRules />
-          <NodeWhitelistRules />
         </div>
       ),
     },

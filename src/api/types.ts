@@ -293,6 +293,10 @@ export interface AdminUser {
   device_limit: number | null
   speed_limit: number | null
   expired_at: number | null
+  /** 客户端最近一次登录时间（unix 秒） */
+  client_login_at: number | null
+  /** 距离下次流量重置的天数，后端按套餐计算 */
+  reset_day: number | null
   remarks: string | null
   password: string
   token: string
@@ -305,8 +309,6 @@ export interface AdminUser {
   alive_ip?: number | null
   ips?: string
   subscribe_url?: string
-  /** v3board：距下次流量重置的天数（null 为不重置或订阅无效），列表与 getUserInfoById 都有 */
-  reset_day?: number | null
   /** 以下只在 getUserInfoById 里有 */
   invite_user?: AdminUser
   invite_user_email?: string

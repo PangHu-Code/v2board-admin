@@ -73,9 +73,6 @@ const routes: RouteObject[] = [
   { path: '/giftcard', ...page(() => import('@/pages/giftcard/GiftcardPage')) },
   { path: '/knowledge', ...page(() => import('@/pages/knowledge/KnowledgePage')) },
   { path: '/order', ...page(() => import('@/pages/order/OrderPage')) },
-  // v3board 独有：提前续期记录、订阅覆盖记录
-  { path: '/newPeriodLog', ...page(() => import('@/pages/newPeriodLog/NewPeriodLogPage')) },
-  { path: '/planChangeLog', ...page(() => import('@/pages/newPeriodLog/PlanChangeLogPage')) },
   // v3board 独有：风控中心
   { path: '/insiderGuard', ...page(() => import('@/pages/insiderGuard/InsiderGuardPage')) },
   { path: '/user', ...page(() => import('@/pages/user/UserPage')) },

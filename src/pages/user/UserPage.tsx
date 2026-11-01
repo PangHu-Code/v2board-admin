@@ -13,7 +13,6 @@ import {
   SelectOutlined,
   SolutionOutlined,
   StopOutlined,
-  SwapOutlined,
   UserAddOutlined,
   UsergroupAddOutlined,
 } from '@ant-design/icons'
@@ -266,25 +265,6 @@ export default function UserPage() {
                   </a>
                 ),
               },
-              // v3board：提前续期记录、订阅覆盖记录
-              {
-                key: 'newPeriodLog',
-                onClick: () => navigate(`/newPeriodLog?email=${encodeURIComponent(user.email)}`),
-                label: (
-                  <a>
-                    <ReloadOutlined /> TA的提前续期记录
-                  </a>
-                ),
-              },
-              {
-                key: 'planChangeLog',
-                onClick: () => navigate(`/planChangeLog?email=${encodeURIComponent(user.email)}`),
-                label: (
-                  <a>
-                    <SwapOutlined /> TA的订阅覆盖记录
-                  </a>
-                ),
-              },
               {
                 key: 'traffic',
                 label: (
@@ -312,6 +292,13 @@ export default function UserPage() {
         </Dropdown>
       ),
     },
+    {
+      title: '客户端登录时间',
+      dataIndex: 'client_login_at',
+      key: 'client_login_at',
+      sorter: true,
+      render: (value: number | null | undefined) => (value ? formatTime(value) : '-'),
+    },
   ]
 
   const filterKeys: FilterKey[] = [
@@ -327,6 +314,7 @@ export default function UserPage() {
     { key: 'transfer_enable', title: '流量', condition: ['>=', '>', '<', '<='] },
     { key: 'd', title: '下行', condition: ['>=', '>', '<', '<='] },
     { key: 'expired_at', title: '到期时间', condition: ['>=', '>', '<', '<='], type: 'date' },
+    { key: 'client_login_at', title: '客户端登录时间', condition: ['>=', '>', '<', '<='], type: 'date' },
     { key: 'uuid', title: 'UUID', condition: ['='] },
     { key: 'token', title: 'TOKEN', condition: ['='] },
     {
@@ -474,22 +462,6 @@ export default function UserPage() {
                   >
                     <a>
                       <UsergroupAddOutlined /> TA的邀请
-                    </a>
-                  </li>
-                  <li
-                    className="ant-dropdown-menu-item"
-                    onClick={() => navigate(`/newPeriodLog?email=${encodeURIComponent(record?.email ?? '')}`)}
-                  >
-                    <a>
-                      <ReloadOutlined /> TA的提前续期记录
-                    </a>
-                  </li>
-                  <li
-                    className="ant-dropdown-menu-item"
-                    onClick={() => navigate(`/planChangeLog?email=${encodeURIComponent(record?.email ?? '')}`)}
-                  >
-                    <a>
-                      <SwapOutlined /> TA的订阅覆盖记录
                     </a>
                   </li>
                   <li className="ant-dropdown-menu-item">
