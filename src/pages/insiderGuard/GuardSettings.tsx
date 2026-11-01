@@ -11,6 +11,12 @@ import { Failed, guardKeys, MUTED, Note, Section } from './shared'
 interface GuardConfig {
   /** 高风险阈值：评分达到该值标为高风险 */
   insider_guard_risk_threshold: number
+  insider_guard_score_pulls_threshold: number
+  insider_guard_score_ips_threshold: number
+  insider_guard_score_uas_threshold: number
+  insider_guard_score_pulls_points: number
+  insider_guard_score_ips_points: number
+  insider_guard_score_uas_points: number
   /** 审计记录保留天数 1～365 */
   insider_guard_retention_days: number
   /** 节点 TCP 健康检查开关 0 / 1 */
@@ -27,6 +33,12 @@ type NumberKey = Exclude<keyof GuardConfig, 'insider_guard_decoy_host'>
 
 const DEFAULTS: GuardConfig = {
   insider_guard_risk_threshold: 50,
+  insider_guard_score_pulls_threshold: 10,
+  insider_guard_score_ips_threshold: 3,
+  insider_guard_score_uas_threshold: 2,
+  insider_guard_score_pulls_points: 25,
+  insider_guard_score_ips_points: 25,
+  insider_guard_score_uas_points: 20,
   insider_guard_retention_days: 3,
   insider_guard_health_enable: 0,
   insider_guard_health_timeout: 2,
@@ -46,6 +58,12 @@ function normalize(raw: Record<string, unknown> | undefined): GuardConfig {
   }
   return {
     insider_guard_risk_threshold: int('insider_guard_risk_threshold'),
+    insider_guard_score_pulls_threshold: int('insider_guard_score_pulls_threshold'),
+    insider_guard_score_ips_threshold: int('insider_guard_score_ips_threshold'),
+    insider_guard_score_uas_threshold: int('insider_guard_score_uas_threshold'),
+    insider_guard_score_pulls_points: int('insider_guard_score_pulls_points'),
+    insider_guard_score_ips_points: int('insider_guard_score_ips_points'),
+    insider_guard_score_uas_points: int('insider_guard_score_uas_points'),
     insider_guard_retention_days: int('insider_guard_retention_days'),
     insider_guard_health_enable: int('insider_guard_health_enable'),
     insider_guard_health_timeout: int('insider_guard_health_timeout'),
@@ -137,7 +155,7 @@ function SettingsForm({ initial }: { initial: GuardConfig }) {
     <>
       <Row
         title="高风险阈值"
-        description="风险评分达到该值的账号标为高风险。当前评分规则最高 50 分（订阅次数、来源 IP 数各 25 分），默认 50"
+        description="风险评分达到该值的账号标为高风险。评分由最近 1 小时订阅次数、来源 IP 数、客户端 UA 数组成，阈值和分值可在下方调整"
       >
         <InputNumber
           min={0}
@@ -145,6 +163,24 @@ function SettingsForm({ initial }: { initial: GuardConfig }) {
           value={form.insider_guard_risk_threshold}
           onChange={(v) => set('insider_guard_risk_threshold', v)}
         />
+      </Row>
+      <Row title="评分：订阅次数" description="最近 1 小时订阅次数超过阈值时增加对应分数">
+        <InputNumber min={1} value={form.insider_guard_score_pulls_threshold} onChange={(v) => set('insider_guard_score_pulls_threshold', v)} />
+        <Unit>次 / </Unit>
+        <InputNumber min={0} max={100} value={form.insider_guard_score_pulls_points} onChange={(v) => set('insider_guard_score_pulls_points', v)} />
+        <Unit>分</Unit>
+      </Row>
+      <Row title="评分：来源 IP 数" description="最近 1 小时不同来源 IP 超过阈值时增加对应分数">
+        <InputNumber min={1} value={form.insider_guard_score_ips_threshold} onChange={(v) => set('insider_guard_score_ips_threshold', v)} />
+        <Unit>个 / </Unit>
+        <InputNumber min={0} max={100} value={form.insider_guard_score_ips_points} onChange={(v) => set('insider_guard_score_ips_points', v)} />
+        <Unit>分</Unit>
+      </Row>
+      <Row title="评分：客户端 UA 数" description="最近 1 小时不同客户端 UA 超过阈值时增加对应分数">
+        <InputNumber min={1} value={form.insider_guard_score_uas_threshold} onChange={(v) => set('insider_guard_score_uas_threshold', v)} />
+        <Unit>个 / </Unit>
+        <InputNumber min={0} max={100} value={form.insider_guard_score_uas_points} onChange={(v) => set('insider_guard_score_uas_points', v)} />
+        <Unit>分</Unit>
       </Row>
       <Row
         title="审计保留天数"

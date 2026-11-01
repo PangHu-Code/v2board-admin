@@ -57,6 +57,7 @@ export function RiskUsers({ hours, onHoursChange, onDetail, onReviewed }: RiskUs
     },
     { title: '订阅次数', dataIndex: 'pulls', key: 'pulls', width: 100 },
     { title: 'IP 数', dataIndex: 'ips', key: 'ips', width: 80 },
+    { title: 'UA 数', dataIndex: 'uas', key: 'uas', width: 80 },
     {
       title: '评分',
       dataIndex: 'score',
@@ -79,7 +80,7 @@ export function RiskUsers({ hours, onHoursChange, onDetail, onReviewed }: RiskUs
               id: row.user_id,
               email: row.email,
               restricted: row.restricted,
-              summary: `${hoursLabel(hours)}：评分 ${row.score}，订阅 ${row.pulls} 次，IP ${row.ips} 个`,
+              summary: `${hoursLabel(hours)}：评分 ${row.score}，订阅 ${row.pulls} 次，IP ${row.ips} 个，UA ${row.uas} 个`,
             }}
             onSaved={onReviewed}
           >
@@ -117,7 +118,7 @@ export function RiskUsers({ hours, onHoursChange, onDetail, onReviewed }: RiskUs
           style={{ marginBottom: 8 }}
         />
       )}
-      <Note style={{ marginBottom: 16 }}>当前评分只覆盖订阅次数和来源 IP 数；不能证明用户恶意行为。</Note>
+      <Note style={{ marginBottom: 16 }}>评分统计订阅次数、来源 IP 数和客户端 UA 数，只用于筛选异常账号，不能单独证明用户恶意行为。</Note>
     </Section>
   )
 }

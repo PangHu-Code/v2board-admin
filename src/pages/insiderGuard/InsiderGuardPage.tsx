@@ -14,6 +14,7 @@ import type { GuardHours } from '@/api/types'
 import { V2Tabs, type V2TabItem } from '@/components/V2Tabs'
 import { AdminLayout } from '@/layouts/AdminLayout'
 import { GuardSettings } from './GuardSettings'
+import { Blacklist } from './Blacklist'
 import { NodeHealth } from './NodeHealth'
 import { NodeIncidents } from './NodeIncidents'
 import { OverviewCards } from './OverviewCards'
@@ -22,7 +23,7 @@ import { RiskUsers } from './RiskUsers'
 import { guardKeys, hoursLabel, Note, useGuardUsers } from './shared'
 import { UserRiskDetail } from './UserRiskDetail'
 
-type TabKey = 'overview' | 'events' | 'incidents' | 'health' | 'detail' | 'settings'
+type TabKey = 'overview' | 'events' | 'incidents' | 'health' | 'detail' | 'blacklist' | 'settings'
 
 /** 标签页内容区：与系统配置页一样放在 block-content 里（有内边距） */
 function Pane({ children }: { children: ReactNode }) {
@@ -112,6 +113,11 @@ export default function InsiderGuardPage() {
           <UserRiskDetail key={detailTarget.seq} initialUserId={detailTarget.userId} onReviewed={reviewed} />
         </Pane>
       ),
+    },
+    {
+      key: 'blacklist',
+      label: '黑名单',
+      children: <Pane><Blacklist /></Pane>,
     },
     {
       key: 'settings',

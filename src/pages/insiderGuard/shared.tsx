@@ -23,6 +23,7 @@ export const guardKeys = {
   timeline: (incidentId: number) => ['insiderGuard', 'timeline', incidentId] as const,
   health: ['insiderGuard', 'health'],
   config: ['config', 'insider_guard'],
+  blacklist: ['insiderGuard', 'blacklist'],
 } as const
 
 /** 用户 ID 输入框的值：只接受纯数字且 ≥ 1，其它返回 undefined */

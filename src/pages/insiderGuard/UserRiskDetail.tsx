@@ -119,7 +119,7 @@ export function UserRiskDetail({ initialUserId, onReviewed }: UserRiskDetailProp
                 id: data.user_id,
                 email: data.email,
                 restricted: data.restriction !== null,
-                summary: `最近 1 小时：评分 ${data.risk.score}，订阅 ${data.risk.subscription_requests_1h} 次，IP ${data.risk.distinct_ips_1h} 个`,
+                summary: `最近 1 小时：评分 ${data.risk.score}，订阅 ${data.risk.subscription_requests_1h} 次，IP ${data.risk.distinct_ips_1h} 个，UA ${data.risk.distinct_uas_1h} 个`,
               }}
               onSaved={onReviewed}
             >
@@ -171,6 +171,7 @@ export function UserRiskDetail({ initialUserId, onReviewed }: UserRiskDetailProp
                 />
                 <Metric label="1 小时订阅次数" value={data.risk.subscription_requests_1h} />
                 <Metric label="1 小时 IP 数" value={data.risk.distinct_ips_1h} />
+                <Metric label="1 小时 UA 数" value={data.risk.distinct_uas_1h} />
                 <Metric label="需人工复核" value={data.risk.manual_review_required ? '是' : '否'} />
               </div>
               <div style={{ fontWeight: 'bold', marginBottom: 6 }}>最近事件</div>

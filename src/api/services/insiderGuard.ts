@@ -7,6 +7,7 @@ import type {
   GuardHealth,
   GuardHealthCheckResult,
   GuardHours,
+  GuardBlacklistItem,
   GuardOverview,
   GuardReviewAction,
   GuardRiskUser,
@@ -51,3 +52,6 @@ export const fetchGuardHealth = () => get<GuardHealth>(guardPath('health'))
 /** 立即探测一个节点的 TCP 连通性（后端限流 10 次 / 分钟） */
 export const checkNodeHealth = (params: { node_type: NodeType; node_id: number }) =>
   post<GuardHealthCheckResult>(guardPath('healthCheck'), params)
+export const fetchGuardBlacklist = () => get<GuardBlacklistItem[]>(guardPath('blacklist'))
+export const addGuardBlacklist = (email: string, note: string) => post<boolean>(guardPath('blacklist'), { email, note })
+export const removeGuardBlacklist = (id: number) => post<boolean>(guardPath('blacklist/remove'), { id })

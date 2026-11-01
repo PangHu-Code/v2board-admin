@@ -487,6 +487,7 @@ export interface GuardRiskUser {
   ua: string | null
   pulls: number
   ips: number
+  uas: number
   score: number
   high_risk: boolean
   /** 是否被限制（拉订阅时下发假入口） */
@@ -523,7 +524,17 @@ export interface GuardRisk {
   score: number
   subscription_requests_1h: number
   distinct_ips_1h: number
+  distinct_uas_1h: number
   manual_review_required: boolean
+}
+
+export interface GuardBlacklistItem {
+  id: number
+  email: string
+  note: string
+  enabled: number
+  created_at: number
+  updated_at: number
 }
 
 /** 审核动作；restrict / release 由 insiderGuard/restrict、insiderGuard/release 写入（限制 = 拉订阅时下发假入口，不封号） */
