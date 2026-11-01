@@ -14,6 +14,9 @@ import { eventColumns, Failed, guardKeys, Note, parseUserId, Section, SubTable }
 interface EventFilter {
   user_id: string
   event_type: GuardEventType | ''
+  ua: string
+  ip: string
+  uuid: string
 }
 
 const TYPE_OPTIONS: Array<{ value: GuardEventType | ''; label: string }> = [
@@ -26,7 +29,7 @@ const columns = eventColumns({ withUser: true, typeTag: true })
 
 export function RecentEvents() {
   const ui = useUi()
-  const [draft, setDraft] = useState<EventFilter>({ user_id: '', event_type: '' })
+  const [draft, setDraft] = useState<EventFilter>({ user_id: '', event_type: '', ua: '', ip: '', uuid: '' })
   const [filter, setFilter] = useState<EventFilter>(draft)
   const [page, setPage] = useState({ current: 1, pageSize: 20 })
 
@@ -38,6 +41,9 @@ export function RecentEvents() {
         ...page,
         user_id: Number.isNaN(userId) ? undefined : userId,
         event_type: filter.event_type || undefined,
+        ua: filter.ua.trim() || undefined,
+        ip: filter.ip.trim() || undefined,
+        uuid: filter.uuid.trim() || undefined,
       })
       if (res.code !== 200) throw new ApiError(res.code, res.msg)
       return { rows: res.data ?? [], total: res.total ?? 0 }
@@ -53,11 +59,11 @@ export function RecentEvents() {
       return
     }
     // 条件没变（包括读取失败后再点「筛选」）：key 不变不会自动重新请求，这里直接重拉
-    if (userId === filter.user_id && draft.event_type === filter.event_type && page.current === 1) {
+    if (JSON.stringify({ ...draft, user_id: userId }) === JSON.stringify(filter) && page.current === 1) {
       void query.refetch()
       return
     }
-    setFilter({ user_id: userId, event_type: draft.event_type })
+    setFilter({ ...draft, user_id: userId })
     setPage((p) => ({ ...p, current: 1 }))
   }
 
@@ -77,6 +83,9 @@ export function RecentEvents() {
               if (e.key === 'Enter') search()
             }}
           />
+          <Input style={{ width: 170 }} placeholder="UA 关键词" allowClear value={draft.ua} onChange={(e) => setDraft({ ...draft, ua: e.target.value })} />
+          <Input style={{ width: 140 }} placeholder="IPv4" allowClear value={draft.ip} onChange={(e) => setDraft({ ...draft, ip: e.target.value })} />
+          <Input style={{ width: 170 }} placeholder="UUID" allowClear value={draft.uuid} onChange={(e) => setDraft({ ...draft, uuid: e.target.value })} />
           <Select<GuardEventType | ''>
             style={{ width: 110 }}
             value={draft.event_type}

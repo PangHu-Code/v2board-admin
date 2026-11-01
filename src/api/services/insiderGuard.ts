@@ -29,6 +29,9 @@ export const fetchGuardEvents = (params: {
   pageSize: number
   user_id?: number
   event_type?: GuardEventType
+  ua?: string
+  ip?: string
+  uuid?: string
 }) => get<GuardEvent[]>(guardPath('events'), params)
 export const fetchGuardUserDetail = (params: { id?: number; email?: string }) => get<GuardUserDetail>(guardPath('userDetail'), params)
 /** 人工审核记录（不改变账号状态）：原因 8～1000 字 */

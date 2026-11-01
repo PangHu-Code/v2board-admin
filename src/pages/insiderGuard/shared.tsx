@@ -162,6 +162,14 @@ export function eventColumns({
       width: 80,
       render: (n: number | null, row) => (row.event_type === 'subscription' && n != null ? n : '-'),
     },
+    {
+      title: '操作',
+      key: 'actions',
+      width: 90,
+      render: (_: unknown, row: GuardEvent) => row.ip_address ? (
+        <a href={`https://iplark.com/${encodeURIComponent(row.ip_address)}`} target="_blank" rel="noreferrer">IP评分</a>
+      ) : '-',
+    },
   ]
 }
 
