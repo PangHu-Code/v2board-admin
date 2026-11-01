@@ -35,6 +35,8 @@ export interface StatOverride {
   paid_user_active?: string
   month_upload?: number
   month_download?: number
+  last_month_upload?: number
+  last_month_download?: number
 }
 
 export interface StatOrderItem {

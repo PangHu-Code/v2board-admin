@@ -203,6 +203,10 @@ export default function DashboardPage() {
                   <p className="fs-3 text-dark mb-0">{formatBytes(stat.month_upload ?? 0)} / {formatBytes(stat.month_download ?? 0)}</p>
                   <p className="text-muted mb-0">本月上传 / 下载（实际）</p>
                 </div>
+                <div className="px-4 px-sm-5 border-start">
+                  <p className="fs-3 text-dark mb-0">{formatBytes(stat.last_month_upload ?? 0)} / {formatBytes(stat.last_month_download ?? 0)}</p>
+                  <p className="text-muted mb-0">上月上传 / 下载（实际）</p>
+                </div>
               </div>
             </div>
           </div>
