@@ -17,6 +17,7 @@ import { EChart, type EChartOption } from '@/components/echarts/EChart'
 import { JsLink } from '@/components/JsLink'
 import { AdminLayout } from '@/layouts/AdminLayout'
 import { useOrderManageStore } from '@/stores/orderManage'
+import { formatBytes } from '@/utils/format'
 
 // 仪表盘（原版模块 sFYk）
 export default function DashboardPage() {
@@ -197,6 +198,10 @@ export default function DashboardPage() {
                 <div className="px-4 px-sm-5 border-start">
                   <p className="fs-3 text-dark mb-0">{stat.paid_user_active || '0'}</p>
                   <p className="text-muted mb-0">有效付费用户</p>
+                </div>
+                <div className="px-4 px-sm-5 border-start">
+                  <p className="fs-3 text-dark mb-0">{formatBytes(stat.month_upload ?? 0)} / {formatBytes(stat.month_download ?? 0)}</p>
+                  <p className="text-muted mb-0">本月上传 / 下载（实际）</p>
                 </div>
               </div>
             </div>
