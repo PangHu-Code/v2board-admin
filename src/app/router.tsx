@@ -73,6 +73,8 @@ const routes: RouteObject[] = [
   { path: '/giftcard', ...page(() => import('@/pages/giftcard/GiftcardPage')) },
   { path: '/knowledge', ...page(() => import('@/pages/knowledge/KnowledgePage')) },
   { path: '/order', ...page(() => import('@/pages/order/OrderPage')) },
+  // v3board 独有：风控中心
+  { path: '/insiderGuard', ...page(() => import('@/pages/insiderGuard/InsiderGuardPage')) },
   { path: '/user', ...page(() => import('@/pages/user/UserPage')) },
   { path: '/ticket', ...page(() => import('@/pages/ticket/TicketPage')) },
   // 工单对话在新窗口打开，没有管理端框架
