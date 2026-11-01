@@ -4,7 +4,7 @@ import { useQuery } from '@tanstack/react-query'
 import { Button, Input, Select, Tag, type TableColumnsType } from 'antd'
 import { useState, type ReactNode } from 'react'
 import { unwrap } from '@/api/request'
-import { fetchGuardUserDetail } from '@/api/services/insiderGuard'
+import { addGuardBlacklist, fetchGuardUserDetail } from '@/api/services/insiderGuard'
 import type { GuardEvent, GuardReview, GuardUserDetail } from '@/api/types'
 import { message } from '@/app/staticApi'
 import { Loading } from '@/components/Loading'
@@ -156,6 +156,7 @@ export function UserRiskDetail({ initialUserId, onReviewed }: UserRiskDetailProp
                   {data.restriction ? <Tag color="red">已限制</Tag> : <Tag>未限制</Tag>}
                 </span>
                 {data.blacklisted && <Tag color="magenta">黑名单</Tag>}
+                {!data.blacklisted && <Button size="small" onClick={async () => { const result = await addGuardBlacklist([data.email], '从风控中心加入'); if (result.code === 200) { message.success('已加入黑名单'); void detail.refetch() } }}>加入黑名单</Button>}
               </div>
               {data.restriction && (
                 <Note style={{ marginBottom: 12 }}>
