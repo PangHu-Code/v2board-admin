@@ -31,7 +31,7 @@ export function RecentEvents() {
   const ui = useUi()
   const [draft, setDraft] = useState<EventFilter>({ user_id: '', event_type: '', ua: '', ip: '', uuid: '' })
   const [filter, setFilter] = useState<EventFilter>(draft)
-  const [page, setPage] = useState({ current: 1, pageSize: 20 })
+  const [page, setPage] = useState({ current: 1, pageSize: 10 })
 
   const query = useQuery({
     queryKey: [...guardKeys.events, filter, page],
